@@ -2,6 +2,7 @@ const $modeBtn = document.querySelector(".mode-btn");
 const $eraserBtn = document.querySelector(".eraser-btn");
 const $resetBtn = document.querySelector(".reset-btn");
 const $saveBtn = document.querySelector(".save-btn");
+const $txtInput = document.querySelector(".txt-input");
 
 // Array.from()을 하는 이유?
 // => getElementsByClassName은 HTMLCollection을 반환하기 때문에
@@ -9,6 +10,7 @@ const $saveBtn = document.querySelector(".save-btn");
 const $colorOptions = Array.from(
   document.getElementsByClassName("color-option")
 );
+const $fontSize = document.getElementById("font-size");
 
 const $color = document.getElementById("color-picker");
 const $lineWidth = document.getElementById("line-width");
@@ -18,6 +20,7 @@ const ctx = $canvas.getContext("2d");
 $canvas.width = 1000;
 $canvas.height = 600;
 ctx.lineWidth = $lineWidth.value;
+ctx.lineCap = "round";
 
 let isPainting = false;
 let isFilling = false;
@@ -127,11 +130,24 @@ const saveImages = () => {
   link.click();
 };
 
+const onDoubleClick = (e) => {
+  const txt = $txtInput.value;
+  const txtSize = $fontSize.value;
+  if (txt !== "") {
+    ctx.save();
+    ctx.lineWidth = 1;
+    ctx.font = `${txtSize}px fantasy`;
+    ctx.strokeText(txt, e.offsetX, e.offsetY);
+    ctx.restore();
+  }
+};
+
 $canvas.addEventListener("mousemove", onMove);
 $canvas.addEventListener("mousedown", startPainting);
 $canvas.addEventListener("mouseup", finishPainting);
 $canvas.addEventListener("mouseleave", finishPainting);
 $canvas.addEventListener("click", onCanvasClick);
+$canvas.addEventListener("dblclick", onDoubleClick);
 
 $lineWidth.addEventListener("change", onLineWidthChange);
 $color.addEventListener("change", onColorChange);
